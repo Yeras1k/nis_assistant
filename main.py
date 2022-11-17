@@ -38,9 +38,9 @@ def bot_message(message):
 
 def check_student(message):
     semail = message.text.lower()
-    mycursor.execute(f"SELECT * FROM students WHERE email = %s",(semail,))
-    result = mycursor.fetchall()
-    bot.send_message(message.chat.id, f'{result[0]}')
+    mycursor.execute(f"SELECT email FROM students WHERE email = %s",(semail,))
+    result = mycursor.fetchone()
+    bot.send_message(message.chat.id, f'{result}')
 
 
 

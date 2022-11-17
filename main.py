@@ -1,9 +1,8 @@
 import os
-import telebot
 import logging
 import random
 import mysql.connector
-from telebot import types
+from telebot
 from config import *
 from flask import Flask, request
 

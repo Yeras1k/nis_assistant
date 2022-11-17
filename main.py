@@ -37,7 +37,7 @@ def bot_message(message):
         bot.register_next_step_handler(msg, check_student)
 
 def check_student(message):
-    smeail = message.text.lower()
+    semail = message.text.lower()
     mycursor.execute(f'SELECT email FROM students WHERE email = {semail}')
     result = mycursor.fetchmany(1)
     bot.send_message(message.chat.id, result)

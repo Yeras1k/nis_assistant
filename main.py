@@ -2,7 +2,7 @@ import os
 import logging
 import random
 import mysql.connector
-from telebot
+import telebot
 from config import *
 from flask import Flask, request
 

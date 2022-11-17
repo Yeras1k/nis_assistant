@@ -22,16 +22,16 @@ mycursor = mydb.cursor()
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    user_name = message.from_user.username
-    service = telebot.types.ReplyKeyboardMarkup(resize_keyboard = True, True)
+    service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('student', 'curator')
     service.row('teacher')
+    user_name = message.from_user.username
     bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль".format(message.from_user), reply_markup = service)
 
 @bot.message_handler(content_types=["text"])
 def bot_message(message):
     if message.text == 'student':
-        service = telebot.types.ReplyKeyboardMarkup(resize_keyboard = True, True)
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('/menu')
         message = bot.send_message(message.from_user.id, 'Введите email', reply_markup=service)
         bot.register_next_step_handler(send, check_student)

@@ -18,7 +18,7 @@ mydb = mysql.connector.connect(
     password = os.environ.get('MYSQLPASSWORD'),
     database = os.environ.get('MYSQLDATABASE')
 )
-mycursor = mydb.cursor()
+mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):

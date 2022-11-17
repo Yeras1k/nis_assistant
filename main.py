@@ -1,4 +1,10 @@
-
+import os
+import logging
+import random
+import mysql.connector
+import telebot
+from config import *
+from flask import Flask, request
 
 bot = telebot.TeleBot(BOT_TOKEN)
 server = Flask(__name__)

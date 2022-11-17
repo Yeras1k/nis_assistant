@@ -33,8 +33,8 @@ def bot_message(message):
     if message.text == 'student':
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('/menu')
-        message = bot.send_message(message.from_user.id, 'Введите email', reply_markup=service)
-        bot.register_next_step_handler(send, check_student)
+        msg = bot.send_message(message.from_user.id, 'Введите email', reply_markup=service)
+        bot.register_next_step_handler(msg, check_student)
 
 def check_student(message):
     smeail = message.text.lower()

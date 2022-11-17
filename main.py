@@ -24,7 +24,8 @@ mycursor = mydb.cursor()
 def start(message):
     user_name = message.from_user.username
     service = telebot.types.ReplyKeyboardMarkup(True, True)
-    service.row('Ученик')
+    service.row('/student', '/curator')
+    service.row('/teacher')
     bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль".format(message.from_user), reply_markup = service)
 
 

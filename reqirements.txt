@@ -1,0 +1,4 @@
+pyTelegramBotAPI
+flask
+mysql-connector-python
+random2

@@ -38,6 +38,7 @@ def bot_message(message):
 
 
 def check_student(message):
+    global semail
     semail = message.text.lower()
     mycursor.execute(f"SELECT email FROM students WHERE email = %s",(semail,))
     result = mycursor.fetchone()

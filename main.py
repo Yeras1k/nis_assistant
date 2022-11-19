@@ -71,6 +71,7 @@ def student_main(message):
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('Расписание', 'Мероприятия')
     service.row('Кружки')
+    user_name = message.from_user.username
     bot.send_message(message.chat.id, f"{user_name}, вы в меню ученика", reply_markup = service)
 
 

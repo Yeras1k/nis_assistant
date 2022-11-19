@@ -203,6 +203,22 @@ def teacher_class(message):
     if message.text == 'Отмена':
         msg = bot.send_message(message.chat.id, 'Выбор ученика отменен')
         bot.register_next_step_handler(msg, start)
+    if message == group:
+        gr = group.split()
+        if len(gr) == 2:
+            mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s AND subgroup = %s",(gr[0], gr[1],))
+            studentss = mycursor.fetchall()
+        elif len(gr) == 1:
+            mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s",(gr[0],))
+            studentss = mycursor.fetchall()
+        reply_message = "- All class:\n"
+        for i in range(len(studentss)):
+            reply_message += f"{studentss[i][0]}: {studentss[i][1]} {studentss[i][2]}"
+        bot.send_message(message.chat.id, reply_message)
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Отмена')
+        msg = bot.send_message(message.chat.id, "Введите id ученика которым хотите написать комментарий", reply_markup = service)
+        bot.register_next_step_handler(msg, select_student)
     else:
         global group
         group = message.text
@@ -223,9 +239,9 @@ def teacher_class(message):
         bot.register_next_step_handler(msg, select_student)
 
 def select_student(message):
-    if message.text == group:
+    if message.text == 'Отмена':
         bot.send_message(message.chat.id, 'Выбор ученика отменен')
-        teacher_class(message.text)
+        teacher_class(group)
     elif message.text.isdigit():
         global com_student
         com_student = message.text

@@ -107,7 +107,7 @@ def check_pass(message):
             bot.register_next_step_handler(msg, start)
 
 def check_pass_curator(message):
-        mycursor.execute(f"SELECT pass FROM students WHERE email = %s",(semail,))
+        mycursor.execute(f"SELECT pass FROM curators WHERE email = %s",(semail,))
         result = mycursor.fetchone()
         if message.text == result[0]:
             mycursor.execute(f"UPDATE curators SET teleid = {message.chat.id} WHERE email = %s",(semail,))

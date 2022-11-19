@@ -32,14 +32,10 @@ def start(message):
 @bot.message_handler(content_types=["text", "photo"])
 def bot_message(message):
     if message.text == 'student':
-        service = telebot.types.ReplyKeyboardMarkup(True, True)
-        service.row('/menu')
-        msg = bot.send_message(message.chat.id, 'Введите email', reply_markup=service)
+        msg = bot.send_message(message.chat.id, 'Введите email')
         bot.register_next_step_handler(msg, check_student)
     if message.text == 'curator':
-        service = telebot.types.ReplyKeyboardMarkup(True, True)
-        service.row('/menu')
-        msg = bot.send_message(message.chat.id, 'Введите email', reply_markup=service)
+        msg = bot.send_message(message.chat.id, 'Введите email')
         bot.register_next_step_handler(msg, check_curator)
 
 def check_student(message):

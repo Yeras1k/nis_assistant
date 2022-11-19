@@ -145,7 +145,7 @@ def curator_main(message):
             service.row(row)
         service.row('Отмена')
         msg = bot.send_message(message.chat.id, 'Выберите класс', reply_markup = service)
-        bot.register_next_step_handler(msg, start)
+        bot.register_next_step_handler(msg, select_class)
 
 def select_class(message):
     if message.text == 'Отмена':

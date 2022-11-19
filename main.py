@@ -24,7 +24,7 @@ mycursor = mydb.cursor(buffered=True)
 def start(message):
     mycursor.execute(f"SELECT teleid FROM students WHERE teleid = %s",(message.chat.id,))
     result = mycursor.fetchone()
-    if result[0] == True:
+    if result[0] == message.chat.id:
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('Расписание', 'Мероприятия')
         service.row('Кружки')

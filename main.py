@@ -22,11 +22,22 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    service = telebot.types.ReplyKeyboardMarkup(True, True)
-    service.row('student', 'curator')
-    service.row('teacher', 'parent')
-    user_name = message.from_user.username
-    bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль".format(message.from_user), reply_markup = service)
+    mycursor.execute(f"SELECT teleid FROM teachers WHERE teleid = %s",(message.chat.id,))
+    result = mycursor.fetchone()
+    if result[0] == message.chat.id:
+        service = telebot.types.ReplyKeyboardMarkup(True, False)
+        service.row('Урок')
+        global tsubject
+        mycursor.execute(f"SELECT subject FROM teachers WHERE teleid = %s",(message.chat.id,))
+        tsubject = mycursor.fetchone()
+        msg = bot.send_message(message.chat.id, f'Учитель {message.from_user.first_name}', reply_markup = service)
+        bot.register_next_step_handler(msg, teacher_main)
+    else:
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('student', 'curator')
+        service.row('teacher', 'parent')
+        user_name = message.from_user.username
+        bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль".format(message.from_user), reply_markup = service)
 
 
 @bot.message_handler(content_types=["text", "photo"])
@@ -99,6 +110,9 @@ def check_teacher(message):
         if dbresult[0] == message.chat.id:
             service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Урок')
+            global tsubject
+            mycursor.execute(f"SELECT subject FROM teachers WHERE teleid = %s",(message.chat.id,))
+            tsubject = mycursor.fetchone()
             msg = bot.send_message(message.chat.id, f'Учитель {message.from_user.first_name}', reply_markup = service)
             bot.register_next_step_handler(msg, teacher_main)
         elif not dbresult[0]:
@@ -108,7 +122,7 @@ def check_teacher(message):
             msg = bot.send_message(message.chat.id, 'В доступе отказано')
             bot.register_next_step_handler(msg, start)
     else:
-        msg = bot.send_message(message.chat.id, 'Куратор с таким email не найден')
+        msg = bot.send_message(message.chat.id, 'Учитель с таким email не найден')
         bot.register_next_step_handler(msg, start)
 
 def check_pass(message):
@@ -146,6 +160,9 @@ def check_pass_teacher(message):
         if message.text == result[0]:
             mycursor.execute(f"UPDATE teachers SET teleid = {message.chat.id} WHERE email = %s",(temail,))
             mydb.commit()
+            global tsubject
+            mycursor.execute(f"SELECT subject FROM teachers WHERE teleid = %s",(message.chat.id,))
+            tsubject = mycursor.fetchone()
             service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Урок')
             msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
@@ -176,7 +193,57 @@ def curator_main(message):
 
 def teacher_main(message):
     if message.text == 'Урок':
-        bot.send_message(message.chat.id, 'Ок')
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Отмена')
+        msg = bot.send_message(message.chat.id, 'Напишите класс и подгруппу(через пробел) в котором сейчас ведете урок', reply_markup = service)
+        bot.register_next_step_handler(msg, teacher_class)
+
+def teacher_class(message):
+    if message.text == 'Отмена':
+        msg = bot.send_message(message.chat.id, 'Выбор ученика отменен')
+        bot.register_next_step_handler(msg, start)
+    else:
+        global group
+        group = message.text.split()
+        if len(group) == 2:
+            mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s AND subgroup = %s",(group[0], group[1],))
+            students = mycursor.fetchall()
+        elif len(group) == 1:
+            mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s",(group[0],))
+            students = mycursor.fetchall()
+        reply_message = "- All class:\n"
+        for i in range(len(students)):
+            reply_message += f"{result[i][0]}: {result[i][1]} {result[i][2]}"
+        bot.send_message(message.chat.id, reply_message)
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Отмена')
+        msg = bot.send_message(message.chat.id, "Введите id ученика которым хотите написать комментарий", reply_markup = service)
+        bot.register_next_step_handler(msg, give_comment)
+
+def select_student(message):
+    if message.text == 'Отмена':
+        bot.send_message(message.chat.id, 'Выбор ученика отменен')
+        teacher_class(group)
+    elif message.text.isdigit():
+        global com_student
+        com_student = message.text
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Отмена')
+        msg = bot.send_message(message.chat.id, "Напишите свой комментарий", reply_markup = sevice)
+        bot.register_next_step_handler(msg, give_comment)
+    else:
+        bot.send_message(message.chat.id, 'Ошибка')
+        teacher_class(group)
+def give_comment(message):
+    if message.text == 'Отмена':
+        bot.send_message(message.chat.id, 'Написание комментария отменено')
+        teacher_class(group)
+    else:
+        mycursor.execute(f"SELECT teleid, name, surname FROM students WHERE id = %s",(com_student,))
+        result = mycursor.fetchmany(1)
+        mycursor.execute(f"INSERT INTO warns(teleid, name, surname, comment, subject) VALUES(%s, %s, %s, %s, %s)", (result[0], result[1], result[2], message.text, tsubject[0]))
+        mydb.commit()
+        teacher_class(group)
 
 def select_class(message):
     if message.text == 'Отмена':

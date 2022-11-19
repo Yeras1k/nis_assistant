@@ -212,7 +212,7 @@ def teacher_class(message):
             mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s",(group[0],))
             studentss = mycursor.fetchall()
         reply_message = "- All class:\n"
-        for i in range(len(students)):
+        for i in range(len(studentss)):
             reply_message += f"{studentss[i][0]}: {studentss[i][1]} {studentss[i][2]}"
         bot.send_message(message.chat.id, reply_message)
         service = telebot.types.ReplyKeyboardMarkup(True, True)

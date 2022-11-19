@@ -141,7 +141,7 @@ def curator_main(message):
         mycursor.execute(f"SELECT class1, class2, class3 FROM shanyraks WHERE name = %s",(result[0],))
         classes = mycursor.fetchall()
         service = telebot.types.ReplyKeyboardMarkup(True, True)
-        for row in (len(classes[0])):
+        for row in range(len(classes[0])):
             service.row('row')
         msg = bot.send_message(message.chat.id, 'Выберите класс', reply_markup = service)
         bot.register_next_step_handler(msg, start)

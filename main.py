@@ -229,7 +229,7 @@ def select_student(message):
         com_student = message.text
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('Отмена')
-        msg = bot.send_message(message.chat.id, "Напишите свой комментарий", reply_markup = sevice)
+        msg = bot.send_message(message.chat.id, "Напишите свой комментарий", reply_markup = service)
         bot.register_next_step_handler(msg, give_comment)
     else:
         bot.send_message(message.chat.id, 'Ошибка')

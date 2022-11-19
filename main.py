@@ -35,7 +35,7 @@ def start(message):
         elif message.chat.id == result[0]:
             service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Отправить сообщение')
-            msg = bot.send_message(message.chat.id, f'Куратор {message.from_user.firs_name}', reply_markup = service)
+            msg = bot.send_message(message.chat.id, f'Куратор {message.from_user.first_name}', reply_markup = service)
             bot.register_next_step_handler(msg, curator_main)
 
 @bot.message_handler(content_types=["text", "photo"])
@@ -86,7 +86,7 @@ def check_curator(message):
         if dbresult[0] == message.chat.id:
             service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Отправить сообщение')
-            msg = bot.send_message(message.chat.id, f'Куратор {message.from_user.firs_name}', reply_markup = service)
+            msg = bot.send_message(message.chat.id, f'Куратор {message.from_user.first_name}', reply_markup = service)
             bot.register_next_step_handler(msg, curator_main)
         elif not dbresult[0]:
             msg = bot.send_message(message.chat.id, 'Введите пароль')

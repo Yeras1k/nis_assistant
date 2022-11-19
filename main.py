@@ -107,7 +107,7 @@ def check_pass(message):
             msg = bot.send_message(message.chat.id, 'Не правильный пароль')
             bot.register_next_step_handler(msg, start)
 
-def check_pass(message):
+def check_pass_curator(message):
         mycursor.execute(f"SELECT pass FROM students WHERE email = %s",(semail,))
         result = mycursor.fetchone()
         if message.text == result[0]:

@@ -206,10 +206,10 @@ def teacher_class(message):
         global group
         group = message.text
         gr = message.text.split
-        if len(group) == 2:
+        if len(gr) == 2:
             mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s AND subgroup = %s",(gr[0], gr[1],))
             studentss = mycursor.fetchall()
-        elif len(group) == 1:
+        elif len(gr) == 1:
             mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s",(gr[0],))
             studentss = mycursor.fetchall()
         reply_message = "- All class:\n"

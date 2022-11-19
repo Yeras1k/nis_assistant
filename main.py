@@ -193,7 +193,7 @@ def curator_main(message):
         bot.register_next_step_handler(msg, select_class)
 
 def teacher_main(message):
-    if message == 'Урок':
+    if message.text == 'Урок':
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('Отмена')
         msg = bot.send_message(message.chat.id, 'Напишите класс и подгруппу(через пробел) в котором сейчас ведете урок', reply_markup = service)

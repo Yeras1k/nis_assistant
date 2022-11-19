@@ -142,7 +142,7 @@ def curator_main(message):
         classes = mycursor.fetchall()
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         for row in classes[0]:
-            service.row(row)
+            service.row(f'{row}')
         msg = bot.send_message(message.chat.id, 'Выберите класс', reply_markup = service)
         bot.register_next_step_handler(msg, start)
 

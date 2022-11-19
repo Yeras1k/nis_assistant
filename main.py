@@ -55,7 +55,7 @@ def check_student(message):
         mycursor.execute(f"SELECT teleid FROM students WHERE email = %s",(semail,))
         dbresult = mycursor.fetchone()
         if dbresult[0] == message.chat.id:
-            service = telebot.types.ReplyKeyboardMarkup(True, True)
+            service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Расписание', 'Мероприятия')
             service.row('Кружки')
             msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
@@ -76,7 +76,7 @@ def check_pass(message):
         if message.text == result[0]:
             mycursor.execute(f"UPDATE students SET teleid = {message.chat.id} WHERE email = %s",(semail,))
             mydb.commit()
-            service = telebot.types.ReplyKeyboardMarkup(True, True)
+            service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Расписание', 'Мероприятия')
             service.row('Кружки')
             msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)

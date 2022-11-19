@@ -204,12 +204,13 @@ def teacher_class(message):
         bot.register_next_step_handler(msg, start)
     else:
         global group
-        group = message.text.split()
+        group = message.text
+        gr = message.text.split
         if len(group) == 2:
-            mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s AND subgroup = %s",(group[0], group[1],))
+            mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s AND subgroup = %s",(gr[0], gr[1],))
             studentss = mycursor.fetchall()
         elif len(group) == 1:
-            mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s",(group[0],))
+            mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s",(gr[0],))
             studentss = mycursor.fetchall()
         reply_message = "- All class:\n"
         for i in range(len(studentss)):

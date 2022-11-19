@@ -70,7 +70,7 @@ def check_student(message):
         msg = bot.send_message(message.chat.id, 'Ученик с таким email не найден')
         bot.register_next_step_handler(msg, start)
 
-def check_cuarator(message):
+def check_curator(message):
     global semail
     semail = message.text.lower()
     mycursor.execute(f"SELECT email FROM curators WHERE email = %s",(semail,))

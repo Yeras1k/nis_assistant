@@ -21,22 +21,12 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    mycursor.execute(f"SELECT teleid FROM students WHERE teleid = %s",(message.chat.id,))
-    result = mycursor.fetchone()
-    if not result:
-        mycursor.execute(f"SELECT teleid FROM curators WHERE teleid = %s",(message.chat.id,))
-        result = mycursor.fetchone()
-        if not result:
-            service = telebot.types.ReplyKeyboardMarkup(True, True)
-            service.row('student', 'curator')
-            service.row('teacher')
-            user_name = message.from_user.username
-            bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль".format(message.from_user), reply_markup = service)
-        elif message.chat.id == result[0]:
-            service = telebot.types.ReplyKeyboardMarkup(True, False)
-            service.row('Отправить сообщение')
-            msg = bot.send_message(message.chat.id, f'Куратор {message.from_user.first_name}', reply_markup = service)
-            bot.register_next_step_handler(msg, curator_main)
+    service = telebot.types.ReplyKeyboardMarkup(True, True)
+    service.row('student', 'curator')
+    service.row('teacher')
+    user_name = message.from_user.username
+    bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль".format(message.from_user), reply_markup = service)
+
 
 @bot.message_handler(content_types=["text", "photo"])
 def bot_message(message):

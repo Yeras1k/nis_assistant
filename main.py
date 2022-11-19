@@ -79,7 +79,7 @@ def student_main(message):
         mycursor.execute(f"SELECT class FROM students WHERE teleid = %s",(message.chat.id,))
         result = mycursor.fetchone()
         img = 'sources/'+result[0]+'.png'
-        bot.send_message(message.chat.id, img)
+        bot.send_photo(message.chat.id, photo=open(img, 'rb'))
 
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])

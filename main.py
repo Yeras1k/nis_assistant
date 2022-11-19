@@ -78,7 +78,7 @@ def student_main(message):
     if message.text == 'Расписание':
         mycursor.execute(f"SELECT class FROM students WHERE teleid = %s",(message.chat.id,))
         result = mycursor.fetchone()
-        img = result[0]+'.png'
+        img = 'sources/'+result[0]+'.png'
         bot.send_photo(message.chat.id, img)
 
 

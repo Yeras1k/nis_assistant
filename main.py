@@ -22,6 +22,16 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
+    mycursor.execute(f"SELECT teleid FROM students WHERE teleid = %s",(message.chat.id,))
+    result = mycursor.fetchone()
+    if result[0] == True:
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Расписание', 'Мероприятия')
+        service.row('Кружки')
+        msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
+        bot.register_next_step_handler(msg, student_main)
+    else:
+        pass
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('student', 'curator')
     service.row('teacher')

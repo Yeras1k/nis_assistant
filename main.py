@@ -207,13 +207,13 @@ def teacher_class(message):
         group = message.text.split()
         if len(group) == 2:
             mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s AND subgroup = %s",(group[0], group[1],))
-            students = mycursor.fetchall()
+            studentss = mycursor.fetchall()
         elif len(group) == 1:
             mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s",(group[0],))
-            students = mycursor.fetchall()
+            studentss = mycursor.fetchall()
         reply_message = "- All class:\n"
         for i in range(len(students)):
-            reply_message += f"{result[i][0]}: {result[i][1]} {result[i][2]}"
+            reply_message += f"{studentss[i][0]}: {studentss[i][1]} {studentss[i][2]}"
         bot.send_message(message.chat.id, reply_message)
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('Отмена')

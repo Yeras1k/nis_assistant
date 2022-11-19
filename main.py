@@ -24,18 +24,18 @@ mycursor = mydb.cursor(buffered=True)
 def start(message):
     mycursor.execute(f"SELECT teleid FROM students WHERE teleid = %s",(message.chat.id,))
     result = mycursor.fetchone()
-    if result[0] == message.chat.id:
-        service = telebot.types.ReplyKeyboardMarkup(True, True)
-        service.row('Расписание', 'Мероприятия')
-        service.row('Кружки')
-        msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
-        bot.register_next_step_handler(msg, student_main)
-    else:
+    if not result[0]:
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('student', 'curator')
         service.row('teacher')
         user_name = message.from_user.username
         bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль".format(message.from_user), reply_markup = service)
+    elif result[0] == message.chat.id:
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Расписание', 'Мероприятия')
+        service.row('Кружки')
+        msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
+        bot.register_next_step_handler(msg, student_main)
 
 @bot.message_handler(content_types=["text"])
 def bot_message(message):

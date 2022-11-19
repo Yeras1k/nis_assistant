@@ -22,8 +22,6 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    mycursor.execute(f"DELETE FROM students WHERE teleid = {message.chat.id}")
-    mydb.commit()
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('student', 'curator')
     service.row('teacher')

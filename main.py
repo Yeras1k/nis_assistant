@@ -35,10 +35,10 @@ def start(message):
         elif message.chat.id == result[0]:
             service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Отправить сообщение')
-            msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
+            msg = bot.send_message(message.chat.id, f'Куратор {message.from_user.firs_name}', reply_markup = service)
             bot.register_next_step_handler(msg, curator_main)
 
-@bot.message_handler(content_types=["text"])
+@bot.message_handler(content_types=["text", "photo"])
 def bot_message(message):
     if message.text == 'student':
         service = telebot.types.ReplyKeyboardMarkup(True, True)
@@ -86,7 +86,7 @@ def check_curator(message):
         if dbresult[0] == message.chat.id:
             service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Отправить сообщение')
-            msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
+            msg = bot.send_message(message.chat.id, f'Куратор {message.from_user.firs_name}', reply_markup = service)
             bot.register_next_step_handler(msg, curator_main)
         elif not dbresult[0]:
             msg = bot.send_message(message.chat.id, 'Введите пароль')
@@ -143,7 +143,47 @@ def curator_main(message):
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         for row in classes[0]:
             service.row(row)
+        service.row('Отмена')
         msg = bot.send_message(message.chat.id, 'Выберите класс', reply_markup = service)
+        bot.register_next_step_handler(msg, start)
+
+def select_class(message):
+    if message.text == 'Выбор классов отменен':
+        msg = bot.send_message(message.chat.id, 'Отправка сообщения отменена')
+        bot.register_next_step_handler(msg, start)
+    else:
+        global students
+        mycursor.execute(f"SELECT teleid FROM sudents WHERE class = %s",(message.text))
+        students = mycursor.fetchall()
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Отмена')
+        msg = bot.send_message(message.chat.id, 'Напишите им сообщение или отправьте картинку', reply_markup = service)
+        bot.register_next_step_handler(msg, event)
+
+def event(message):
+    if message.text == 'Отмена':
+        msg = bot.send_message(message.chat.id, 'Отправка сообщения отменена')
+        bot.register_next_step_handler(msg, start)
+    if message.text == 'Да':
+        msg = bot.send_message(message.chat.id, 'Напишите им сообщение', reply_markup = service)
+        bot.register_next_step_handler(msg, event)
+    elif message.content_type == "photo":
+        raw = message.photo[2].file_id
+        name = raw+".jpg"
+        file_info = bot.get_file(raw)
+        downloaded_file = bot.download_file(file_info.file_path)
+        with open(name,'wb') as new_file:
+            new_file.write(downloaded_file)
+        img = open(name, 'rb')
+        for student in students[0]:
+            bot.send_photo(student, img)
+        bot.send_message(message.chat.id, 'Картинки успешно отправлены')
+        msg = bot.send_message(message.chat.id, 'Желаете также отправить сообщение? (Да/Отмена)')
+        bot.register_next_step_handler(msg, event)
+    else:
+        for student in students[0]:
+            bot.send_message(student, message.text)
+        msg = bot.send_message(message.chat.id, 'Сообщение успешно отправлено')
         bot.register_next_step_handler(msg, start)
 
 

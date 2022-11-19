@@ -175,9 +175,9 @@ def curator_main(message):
         bot.register_next_step_handler(msg, select_class)
 
 def teacher_main(message):
-    if message.text == 'Уроки':
+    if message.text == 'Урок':
         bot.send_message(message.chat.id, 'Ок')
-        
+
 def select_class(message):
     if message.text == 'Отмена':
         msg = bot.send_message(message.chat.id, 'Отправка сообщения отменена')

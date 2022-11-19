@@ -242,7 +242,7 @@ def give_comment(message):
     else:
         mycursor.execute(f"SELECT teleid, name, surname FROM students WHERE id = %s",(com_student,))
         result = mycursor.fetchmany(1)
-        mycursor.execute(f"INSERT INTO warns(teleid, name, surname, comment, subject) VALUES(%s, %s, %s, %s, %s)", (result[0], result[1], result[2], message.text, tsubject[0]))
+        mycursor.execute(f"INSERT INTO warns(teleid, name, surname, comment, subject) VALUES(%s, %s, %s, %s, %s)", (result[0][0], result[0][1], result[0][2], message.text, tsubject[0]))
         mydb.commit()
         teacher_class(group)
 

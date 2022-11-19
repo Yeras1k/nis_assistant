@@ -33,7 +33,7 @@ def bot_message(message):
     if message.text == 'student':
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('/menu')
-        msg = bot.send_message(message.from_user.id, 'Введите email', reply_markup=service)
+        msg = bot.send_message(message.chat.id, 'Введите email', reply_markup=service)
         bot.register_next_step_handler(msg, check_student)
 
 
@@ -41,7 +41,34 @@ def check_student(message):
     semail = message.text.lower()
     mycursor.execute(f"SELECT email FROM students WHERE email = %s",(semail,))
     result = mycursor.fetchone()
-    bot.send_message(message.chat.id, f'{result[0]}')
+    if result:
+        mycursor.execute(f"SELECT teleid FROM students WHERE email = %s",(semail,))
+        dbresult = mycursor.fetchone()
+        if dbresult[0] == message.chat.id:
+            msg = bot.send_message(message.chat.id, 'Успешно вошли')
+            bot.register_next_step_handler(msg, student_main)
+        elif not dbresult[0]:
+            msg = bot.send_message(message.chat.id, 'Введите пароль')
+            bot.register_next_step_handler(msg, check_pass)
+        else:
+            msg = bot.send_message(message.chat.id, 'В доступе отказано')
+            bot.register_next_step_handler(msg, start)
+    else:
+        msg = bot.send_message(message.chat.id, 'Ученик с таким email не найден')
+        bot.register_next_step_handler(msg, start)
+
+def check_pass(message):
+        mycursor.execute(f"SELECT pass FROM students WHERE email = %s",(semail,))
+        result = mycursor.fetchone()
+        if message.text == result[0]:
+            mycursor.execute(f"INSERT INTO students(teleid) VALUES({message.chat.id})")
+            mydb.commit()
+        else:
+            msg = bot.send_message(message.chat.id, 'Не правильный пароль')
+            bot.register_next_step_handler(msg, start)
+
+def student_main(message):
+    msg = bot.send_message(message.chat.id, 'Не правильный пароль')
 
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])

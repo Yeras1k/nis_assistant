@@ -10,7 +10,6 @@ bot = telebot.TeleBot(BOT_TOKEN)
 server = Flask(__name__)
 logger = telebot.logger
 logger.setLevel(logging.DEBUG)
-
 mydb = mysql.connector.connect(
     host = os.environ.get('MYSQLHOST'),
     port = os.environ.get('MYSQLPORT'),

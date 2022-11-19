@@ -24,15 +24,15 @@ def start(message):
     mycursor.execute(f"SELECT teleid FROM students WHERE teleid = %s",(message.chat.id,))
     result = mycursor.fetchone()
     if not result:
-        service = telebot.types.ReplyKeyboardMarkup(True, True)
-        service.row('student', 'curator')
-        service.row('teacher')
-        user_name = message.from_user.username
-        bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль".format(message.from_user), reply_markup = service)
-    else:
         mycursor.execute(f"SELECT teleid FROM curators WHERE teleid = %s",(message.chat.id,))
         result = mycursor.fetchone()
-        if result[0] == message.chat.id:
+        if not result:
+            service = telebot.types.ReplyKeyboardMarkup(True, True)
+            service.row('student', 'curator')
+            service.row('teacher')
+            user_name = message.from_user.username
+            bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль".format(message.from_user), reply_markup = service)
+        elif message.text == message.chat.id:
             service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Отправить сообщение')
             msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)

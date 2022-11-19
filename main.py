@@ -156,7 +156,7 @@ def event(message):
         msg = bot.send_message(message.chat.id, 'Отправка сообщения отменена')
         bot.register_next_step_handler(msg, start)
     if message.text == 'Да':
-        msg = bot.send_message(message.chat.id, 'Напишите им сообщение')
+        msg = bot.send_message(message.chat.id, 'Напишите им сообщение или отправьте картинку')
         bot.register_next_step_handler(msg, event)
     elif message.content_type == "photo":
         raw = message.photo[2].file_id
@@ -169,13 +169,18 @@ def event(message):
         for student in students[0]:
             bot.send_photo(student, img)
         bot.send_message(message.chat.id, 'Картинки успешно отправлены')
-        msg = bot.send_message(message.chat.id, 'Желаете также отправить сообщение? (Да/Отмена)')
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Да','Отмена')
+        msg = bot.send_message(message.chat.id, 'Желаете еще что нибудь отправить? (Да/Отмена)', reply_markup = service)
         bot.register_next_step_handler(msg, event)
     else:
         for student in students[0]:
             bot.send_message(student, message.text)
-        msg = bot.send_message(message.chat.id, 'Сообщение успешно отправлено')
-        bot.register_next_step_handler(msg, start)
+        bot.send_message(message.chat.id, 'Сообщение успешно отправлено')
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Да','Отмена')
+        msg = bot.send_message(message.chat.id, 'Желаете еще что нибудь отправить? (Да/Отмена)', reply_markup = service)
+        bot.register_next_step_handler(msg, event)
 
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])

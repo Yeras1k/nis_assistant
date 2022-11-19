@@ -31,12 +31,11 @@ def start(message):
         msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
         bot.register_next_step_handler(msg, student_main)
     else:
-        pass
-    service = telebot.types.ReplyKeyboardMarkup(True, True)
-    service.row('student', 'curator')
-    service.row('teacher')
-    user_name = message.from_user.username
-    bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль".format(message.from_user), reply_markup = service)
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('student', 'curator')
+        service.row('teacher')
+        user_name = message.from_user.username
+        bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль".format(message.from_user), reply_markup = service)
 
 @bot.message_handler(content_types=["text"])
 def bot_message(message):

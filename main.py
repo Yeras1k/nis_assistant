@@ -36,12 +36,12 @@ def bot_message(message):
         msg = bot.send_message(message.from_user.id, 'Введите email', reply_markup=service)
         bot.register_next_step_handler(msg, check_student)
 
+
 def check_student(message):
     semail = message.text.lower()
     mycursor.execute(f"SELECT email FROM students WHERE email = %s",(semail,))
     result = mycursor.fetchone()
     bot.send_message(message.chat.id, f'{result}')
-
 
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])

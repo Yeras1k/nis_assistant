@@ -153,7 +153,7 @@ def select_class(message):
         bot.register_next_step_handler(msg, start)
     else:
         global students
-        mycursor.execute(f"SELECT teleid FROM students WHERE class = %s",(message.text))
+        mycursor.execute(f"SELECT teleid FROM students WHERE class = %s",(message.text,))
         students = mycursor.fetchall()
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('Отмена')

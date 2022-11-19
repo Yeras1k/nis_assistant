@@ -32,7 +32,7 @@ def start(message):
         user_name = message.from_user.username
         bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль".format(message.from_user), reply_markup = service)
     elif result[0] == message.chat.id:
-        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service = telebot.types.ReplyKeyboardMarkup(True, False)
         service.row('Расписание', 'Мероприятия')
         service.row('Кружки')
         msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)

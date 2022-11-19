@@ -62,7 +62,7 @@ def check_pass(message):
         mycursor.execute(f"SELECT pass FROM students WHERE email = %s",(semail,))
         result = mycursor.fetchone()
         if message.text == result[0]:
-            mycursor.execute(f"INSERT INTO students(teleid) VALUES({message.chat.id})")
+            mycursor.execute(f"UPDATE students SET teleid = {message.chat.id} WHERE email = %s",(semail,))
             mydb.commit()
         else:
             msg = bot.send_message(message.chat.id, 'Не правильный пароль')

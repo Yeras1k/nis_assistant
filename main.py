@@ -45,7 +45,10 @@ def check_student(message):
         mycursor.execute(f"SELECT teleid FROM students WHERE email = %s",(semail,))
         dbresult = mycursor.fetchone()
         if dbresult[0] == message.chat.id:
-            msg = bot.send_message(message.chat.id, 'Успешно вошли')
+            service = telebot.types.ReplyKeyboardMarkup(True, True)
+            service.row('Расписание', 'Мероприятия')
+            service.row('Кружки')
+            msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
             bot.register_next_step_handler(msg, student_main)
         elif not dbresult[0]:
             msg = bot.send_message(message.chat.id, 'Введите пароль')
@@ -63,16 +66,20 @@ def check_pass(message):
         if message.text == result[0]:
             mycursor.execute(f"UPDATE students SET teleid = {message.chat.id} WHERE email = %s",(semail,))
             mydb.commit()
+            service = telebot.types.ReplyKeyboardMarkup(True, True)
+            service.row('Расписание', 'Мероприятия')
+            service.row('Кружки')
+            msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
         else:
             msg = bot.send_message(message.chat.id, 'Не правильный пароль')
             bot.register_next_step_handler(msg, start)
 
 def student_main(message):
-    service = telebot.types.ReplyKeyboardMarkup(True, True)
-    service.row('Расписание', 'Мероприятия')
-    service.row('Кружки')
-    user_name = message.from_user.username
-    bot.send_message(message.chat.id, f"{user_name}, вы в меню ученика", reply_markup = service)
+    if message.text == 'Расписание':
+        mycursor.execute(f"SELECT class FROM students WHERE teleid = %s",(message.chat.id,))
+        result = mycursor.fetchone()
+        img = result[0]+'.png'
+        bot.send_photo(message.chat.id, img)
 
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])

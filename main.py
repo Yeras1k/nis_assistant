@@ -226,7 +226,7 @@ def select_student(message):
     if message.text == 'Отмена':
         bot.send_message(message.chat.id, 'Выбор ученика отменен')
         teacher_class(group)
-    elif message.isdigit():
+    elif message.text.isdigit():
         global com_student
         com_student = message.text
         service = telebot.types.ReplyKeyboardMarkup(True, True)
@@ -246,7 +246,10 @@ def give_comment(message):
         result = mycursor.fetchmany(1)
         mycursor.execute(f"INSERT INTO warns(teleid, name, surname, comment, subject) VALUES(%s, %s, %s, %s, %s)", (result[0][0], result[0][1], result[0][2], message.text, tsubject[0]))
         mydb.commit()
-        teacher_class(group)
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row(group)
+        msg = bot.send_message(message.chat.id, "Комментарий сохранен", reply_markup = service)
+        bot.register_next_step_handler(msg, teacher_class) 
 
 def select_class(message):
     if message.text == 'Отмена':

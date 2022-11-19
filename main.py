@@ -30,7 +30,13 @@ def start(message):
         user_name = message.from_user.username
         bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль".format(message.from_user), reply_markup = service)
     else:
-        pass
+        mycursor.execute(f"SELECT teleid FROM curators WHERE teleid = %s",(message.chat.id,))
+        result = mycursor.fetchone()
+        if result[0] == message.chat.id:
+            service = telebot.types.ReplyKeyboardMarkup(True, False)
+            service.row('Отправить сообщение')
+            msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
+            bot.register_next_step_handler(msg, curator_main)
 
 @bot.message_handler(content_types=["text"])
 def bot_message(message):
@@ -102,6 +108,7 @@ def check_pass(message):
             service.row('Расписание', 'Мероприятия')
             service.row('Кружки')
             msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
+            bot.register_next_step_handler(msg, student_main)
         else:
             msg = bot.send_message(message.chat.id, 'Не правильный пароль')
             bot.register_next_step_handler(msg, start)
@@ -115,6 +122,7 @@ def check_pass_curator(message):
             service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Отправить сообщение')
             msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
+            bot.register_next_step_handler(msg, curator_main)
         else:
             msg = bot.send_message(message.chat.id, 'Не правильный пароль')
             bot.register_next_step_handler(msg, start)
@@ -125,6 +133,18 @@ def student_main(message):
         result = mycursor.fetchone()
         img = 'sources/'+result[0]+'.png'
         bot.send_photo(message.chat.id, photo=open(img, 'rb'))
+
+def curator_main(message):
+    if message.text == 'Отправить сообщение':
+        mycursor.execute(f"SELECT shanyrak FROM curators WHERE teleid = %s",(message.chat.id,))
+        result = mycursor.fetchone()
+        mycursor.execute(f"SELECT class1, class2, class3 FROM shanyraks WHERE name = %s",(result[0],))
+        classes = mycursor.fetchall()
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        for row in (len(classes[0])):
+            service.row('row')
+        msg = bot.send_message(message.chat.id, 'Выберите класс', reply_markup = service)
+        bot.register_next_step_handler(msg, start)
 
 
 @server.route(f"/{BOT_TOKEN}", methods=["POST"])

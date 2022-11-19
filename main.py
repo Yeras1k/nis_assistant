@@ -193,14 +193,14 @@ def curator_main(message):
         bot.register_next_step_handler(msg, select_class)
 
 def teacher_main(text):
-    if text == 'Урок':
+    if message.text == 'Урок':
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('Отмена')
         msg = bot.send_message(message.chat.id, 'Напишите класс и подгруппу(через пробел) в котором сейчас ведете урок', reply_markup = service)
         bot.register_next_step_handler(msg, teacher_class)
 
 def teacher_class(message):
-    if message == 'Отмена':
+    if message.text == 'Отмена':
         msg = bot.send_message(message.chat.id, 'Выбор ученика отменен')
         bot.register_next_step_handler(msg, start)
     else:
@@ -223,9 +223,9 @@ def teacher_class(message):
         bot.register_next_step_handler(msg, select_student)
 
 def select_student(message):
-    if message.text == 'Отмена':
+    if message.text == group:
         bot.send_message(message.chat.id, 'Выбор ученика отменен')
-        teacher_class(group)
+        teacher_class(message.text)
     elif message.text.isdigit():
         global com_student
         com_student = message.text

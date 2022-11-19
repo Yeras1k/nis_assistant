@@ -205,7 +205,7 @@ def teacher_class(message):
         bot.register_next_step_handler(msg, start)
     else:
         global group
-        group = message
+        group = message.text
         gr = group.split()
         if len(gr) == 2:
             mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s AND subgroup = %s",(gr[0], gr[1],))
@@ -223,10 +223,10 @@ def teacher_class(message):
         bot.register_next_step_handler(msg, select_student)
 
 def select_student(message):
-    if message == 'Отмена':
+    if message.text == 'Отмена':
         bot.send_message(message.chat.id, 'Выбор ученика отменен')
         teacher_class(group)
-    elif messageisdigit():
+    elif message.isdigit():
         global com_student
         com_student = message.text
         service = telebot.types.ReplyKeyboardMarkup(True, True)
@@ -238,7 +238,7 @@ def select_student(message):
         teacher_class(group)
 
 def give_comment(message):
-    if message == 'Отмена':
+    if message.text == 'Отмена':
         bot.send_message(message.chat.id, 'Написание комментария отменено')
         teacher_class(group)
     else:
@@ -249,7 +249,7 @@ def give_comment(message):
         teacher_class(group)
 
 def select_class(message):
-    if message == 'Отмена':
+    if message.text == 'Отмена':
         msg = bot.send_message(message.chat.id, 'Отправка сообщения отменена')
         bot.register_next_step_handler(msg, start)
     else:
@@ -262,10 +262,10 @@ def select_class(message):
         bot.register_next_step_handler(msg, event)
 
 def event(message):
-    if message == 'Отмена':
+    if message.text == 'Отмена':
         msg = bot.send_message(message.chat.id, 'Отправка сообщения отменена')
         bot.register_next_step_handler(msg, start)
-    if message == 'Да':
+    if message.text == 'Да':
         msg = bot.send_message(message.chat.id, 'Напишите им сообщение или отправьте картинку')
         bot.register_next_step_handler(msg, event)
     elif message.content_type == "photo":

@@ -200,7 +200,7 @@ def teacher_main(message):
         bot.register_next_step_handler(msg, teacher_class)
 
 def teacher_class(message):
-    if message.text == 'Отмена':
+    if message == 'Отмена':
         msg = bot.send_message(message.chat.id, 'Выбор ученика отменен')
         bot.register_next_step_handler(msg, start)
     if message == group:

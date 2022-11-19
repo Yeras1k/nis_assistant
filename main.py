@@ -218,7 +218,7 @@ def teacher_class(message):
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('Отмена')
         msg = bot.send_message(message.chat.id, "Введите id ученика которым хотите написать комментарий", reply_markup = service)
-        bot.register_next_step_handler(msg, select_comment)
+        bot.register_next_step_handler(msg, select_student)
 
 def select_student(message):
     if message.text == 'Отмена':

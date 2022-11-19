@@ -155,7 +155,7 @@ def event(message):
         msg = bot.send_message(message.chat.id, 'Отправка сообщения отменена')
         bot.register_next_step_handler(msg, start)
     if message.text == 'Да':
-        msg = bot.send_message(message.chat.id, 'Напишите им сообщение', reply_markup = service)
+        msg = bot.send_message(message.chat.id, 'Напишите им сообщение')
         bot.register_next_step_handler(msg, event)
     elif message.content_type == "photo":
         raw = message.photo[2].file_id

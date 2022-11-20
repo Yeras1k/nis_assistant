@@ -74,7 +74,7 @@ def check_parent(message):
     mycursor.execute(f"SELECT child_email FROM parent WHERE child_email = %s",(pemail,))
     result = mycursor.fetchone()
     if result:
-        mycursor.execute(f"SELECT teleid FROM parent WHERE email = %s",(pemail,))
+        mycursor.execute(f"SELECT teleid FROM parent WHERE child_email = %s",(pemail,))
         dbresult = mycursor.fetchone()
         if dbresult[0] == message.chat.id:
             service = telebot.types.ReplyKeyboardMarkup(True, False)

@@ -79,7 +79,7 @@ def check_parent(message):
         if dbresult[0] == message.chat.id:
             service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Посмотреть комментарии к ребенку')
-            service.row('Добавить ребенка')
+            service.row('Добавить ребенка', 'Обновить данные о себе')
             msg = bot.send_message(message.chat.id, f'Родитель {message.from_user.first_name}', reply_markup = service)
             bot.register_next_step_handler(msg, parent_main)
         elif not dbresult[0]:

@@ -219,6 +219,7 @@ def teacher_class(message):
         bot.send_message(message.chat.id, reply_message)
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row(group)
+        service.row('Назад')
         msg = bot.send_message(message.chat.id, "Введите id ученика которым хотите написать комментарий", reply_markup = service)
         bot.register_next_step_handler(msg, select_student)
 
@@ -226,6 +227,9 @@ def select_student(message):
     if message.text == group:
         bot.send_message(message.chat.id, 'Выбор ученика отменен')
         teacher_class(message)
+    if message.text == 'Назад':
+        msg = bot.send_message(message.chat.id, "Назад")
+        bot.register_next_step_handler(msg,start)
     elif message.text.isdigit():
         global com_student
         com_student = message.text

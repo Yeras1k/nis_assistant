@@ -198,7 +198,7 @@ def teacher_main(message):
         msg = bot.send_message(message.chat.id, 'Напишите класс и подгруппу(через пробел) в котором сейчас ведете урок', reply_markup = service)
         bot.register_next_step_handler(msg, teacher_class)
 
-def teacher_class(message):
+def teacher_class(message.text):
     if message.text == 'Отмена':
         msg = bot.send_message(message.chat.id, 'Выбор ученика отменен')
         bot.register_next_step_handler(msg, start)
@@ -224,7 +224,7 @@ def teacher_class(message):
 def select_student(message):
     if message.text == 'Отмена':
         bot.send_message(message.chat.id, 'Выбор ученика отменен')
-        teacher_class(group)
+        teacher_class(message.text = group)
     elif message.text.isdigit():
         global com_student
         com_student = message.text

@@ -6,6 +6,7 @@ import mysql.connector
 from config import *
 from flask import Flask, request
 
+
 bot = telebot.TeleBot(BOT_TOKEN)
 server = Flask(__name__)
 logger = telebot.logger
@@ -205,7 +206,7 @@ def teacher_class(message.text):
     else:
         global group
         group = message.text
-        gr = message.text.split
+        gr = group.split()
         if len(gr) == 2:
             mycursor.execute(f"SELECT id, name, surname FROM students WHERE class = %s AND subgroup = %s",(gr[0], gr[1],))
             studentss = mycursor.fetchall()
@@ -245,7 +246,10 @@ def give_comment(message):
         result = mycursor.fetchmany(1)
         mycursor.execute(f"INSERT INTO warns(teleid, name, surname, comment, subject) VALUES(%s, %s, %s, %s, %s)", (result[0][0], result[0][1], result[0][2], message.text, tsubject[0]))
         mydb.commit()
-        teacher_class(group)
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row(group)
+        msg = bot.send_message(message.chat.id, "Комментарий сохранен", reply_markup = service)
+        bot.register_next_step_handler(msg, teacher_class) 
 
 def select_class(message):
     if message.text == 'Отмена':

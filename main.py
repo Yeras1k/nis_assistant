@@ -41,7 +41,7 @@ def bot_message(message):
         msg = bot.send_message(message.chat.id, 'Введите email')
         bot.register_next_step_handler(msg, check_teacher)
     if message.text == 'parent':
-        msg = bot.send_message(message.chat.id, 'Введите email ребенка. Если у вас их несколько\n то вы сможете добавить их позже', reply_markup = service)
+        msg = bot.send_message(message.chat.id, 'Введите email ребенка. Если у вас их несколько\n то вы сможете добавить их позже')
         bot.register_next_step_handler(msg, check_parent)
 
 def check_student(message):

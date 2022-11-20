@@ -51,8 +51,8 @@ def bot_message(message):
         msg = bot.send_message(message.chat.id, 'Введите email')
         bot.register_next_step_handler(msg, check_teacher)
     if message.text == 'parent':
-        msg = bot.send_message(message.chat.id, 'Введите email')
-        bot.register_next_step_handler(msg, check_teacher)
+        msg = bot.send_message(message.chat.id, 'Введите email ребенка. Если у вас их несколько\n то вы сможете добавить их позже', reply_markup = service)
+        bot.register_next_step_handler(msg, check_parent)
 
 def check_student(message):
     global semail
@@ -71,6 +71,30 @@ def check_student(message):
         elif not dbresult[0]:
             msg = bot.send_message(message.chat.id, 'Введите пароль')
             bot.register_next_step_handler(msg, check_pass)
+        else:
+            bot.send_message(message.chat.id, 'В доступе отказано')
+            start(message)
+    else:
+        bot.send_message(message.chat.id, 'Ученик с таким email не найден')
+        start(message)
+
+def check_parent(message):
+    global pemail
+    pemail = message.text.lower()
+    mycursor.execute(f"SELECT child_email FROM parent WHERE child_email = %s",(pemail,))
+    result = mycursor.fetchone()
+    if result:
+        mycursor.execute(f"SELECT teleid FROM parent WHERE email = %s",(pemail,))
+        dbresult = mycursor.fetchone()
+        if dbresult[0] == message.chat.id:
+            service = telebot.types.ReplyKeyboardMarkup(True, False)
+            service.row('Посмотреть комментарии к ребенку')
+            service.row('Добавить ребенка')
+            msg = bot.send_message(message.chat.id, f'Родитель {message.from_user.first_name}', reply_markup = service)
+            bot.register_next_step_handler(msg, parent_main)
+        elif not dbresult[0]:
+            msg = bot.send_message(message.chat.id, 'Введите пароль. Ваш ребенок может его предоставить')
+            bot.register_next_step_handler(msg, check_pass_parent)
         else:
             bot.send_message(message.chat.id, 'В доступе отказано')
             start(message)
@@ -142,6 +166,21 @@ def check_pass(message):
             bot.send_message(message.chat.id, 'Не правильный пароль')
             start(message)
 
+def check_pass_parent(message):
+        mycursor.execute(f"SELECT pass FROM parent WHERE child_email = %s",(pemail,))
+        result = mycursor.fetchone()
+        if message.text == result[0]:
+            mycursor.execute(f"UPDATE parent SET teleid = {message.chat.id} WHERE child_email = %s",(pemail,))
+            mydb.commit()
+            service = telebot.types.ReplyKeyboardMarkup(True, False)
+            service.row('Посмотреть комментарии к ребенку')
+            service.row('Добавить ребенка', 'Обновить данные о себе')
+            msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
+            bot.register_next_step_handler(msg, parent_main)
+        else:
+            bot.send_message(message.chat.id, 'Не правильный пароль')
+            start(message)
+
 def check_pass_curator(message):
         mycursor.execute(f"SELECT pass FROM curators WHERE email = %s",(cemail,))
         result = mycursor.fetchone()
@@ -187,6 +226,20 @@ def student_main(message):
         password = 'Пароль для родителя: ' + result[0]
         msg = bot.send_message(message.chat.id, password)
         start(message)
+
+def parent_main(message):
+    mycursor.execute(f"SELECT child FROM parent WHERE teleid = %s",(message.chat.id,))
+    result = mycursor.fetchone()
+    mycursor.execute(f"SELECT id, name, subject FROM warns WHERE teleid = %s",(result[0],))
+    comments = mycursor.fetchall()
+    if comments == None:
+        bot.send_message(message.chat.id, 'Нет комментариев', reply_markup = service)
+    else:
+        reply_message = "- Все комментарии:\n"
+        for i in range(len(comments)):
+            reply_message += f"({studentss[i][0]}) {studentss[i][1]}: {studentss[i][2]}\n"
+    bot.send_message(message.chat.id, reply_message)
+    start(message)
 
 def curator_main(message):
     if message.text == 'Отправить сообщение':

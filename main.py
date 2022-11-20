@@ -225,7 +225,7 @@ def teacher_class(message):
 def select_student(message):
     if message.text == group:
         bot.send_message(message.chat.id, 'Выбор ученика отменен')
-        teacher_class(message.text)
+        teacher_class(message)
     elif message.text.isdigit():
         global com_student
         com_student = message.text

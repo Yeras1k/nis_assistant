@@ -222,14 +222,14 @@ def student_main(message):
 def parent_main(message):
     mycursor.execute(f"SELECT child FROM parent WHERE teleid = %s",(message.chat.id,))
     result = mycursor.fetchone()
-    mycursor.execute(f"SELECT id, name, subject FROM warns WHERE teleid = %s",(result[0],))
+    mycursor.execute(f"SELECT id, name, comment, subject FROM warns WHERE teleid = %s",(result[0],))
     comments = mycursor.fetchall()
     if comments == None:
         bot.send_message(message.chat.id, 'Нет комментариев', reply_markup = service)
     else:
         reply_message = "- Все комментарии:\n"
         for i in range(len(comments)):
-            reply_message += f"({studentss[i][0]}) {studentss[i][1]}: {studentss[i][2]}\n"
+            reply_message += f"{comments[i][0]}) {comments[i][1]}: {comments[i][2]} ({comments[i][3]})\n"
     bot.send_message(message.chat.id, reply_message)
     start(message)
 

@@ -228,8 +228,8 @@ def select_student(message):
         bot.send_message(message.chat.id, 'Выбор ученика отменен')
         teacher_class(message)
     if message.text == 'Назад':
-        msg = bot.send_message(message.chat.id, "Назад")
-        bot.register_next_step_handler(msg,start)
+        bot.send_message(message.chat.id, "Назад")
+        start(message)
     elif message.text.isdigit():
         global com_student
         com_student = message.text

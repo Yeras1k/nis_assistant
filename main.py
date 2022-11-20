@@ -182,7 +182,7 @@ def student_main(message):
     elif message.text == 'Пароль родителя':
         mycursor.execute(f"SELECT email FROM students WHERE teleid = %s",(message.chat.id,))
         semail = mycursor.fetchone()
-        mycursor.execute(f"SELECT pass FROM parents WHERE email = %s",(semail,))
+        mycursor.execute(f"SELECT pass FROM parents WHERE email = %s",(semail[0],))
         result = mycursor.fetchone()
         password = 'Пароль для родителя: ' + result[0]
         msg = bot.send_message(message.chat.id, password)

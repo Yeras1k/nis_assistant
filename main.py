@@ -23,16 +23,14 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    mycursor.execute(f"SELECT teleid FROM teachers WHERE teleid = %s",(message.chat.id,))
+    mycursor.execute(f"SELECT teleid FROM students WHERE teleid = %s",(message.chat.id,))
     result = mycursor.fetchone()
-    if result[0] == message.chat.id:
+     if result[0] == message.chat.id:
         service = telebot.types.ReplyKeyboardMarkup(True, False)
-        service.row('Урок')
-        global tsubject
-        mycursor.execute(f"SELECT subject FROM teachers WHERE teleid = %s",(message.chat.id,))
-        tsubject = mycursor.fetchone()
-        msg = bot.send_message(message.chat.id, f'Учитель {message.from_user.first_name}', reply_markup = service)
-        bot.register_next_step_handler(msg, teacher_main)
+        service.row('Расписание', 'Мероприятия')
+        service.row('Кружки', 'Пароль родителя')
+        msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
+        bot.register_next_step_handler(msg, student_main)
     else:
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row('student', 'curator')
@@ -50,6 +48,9 @@ def bot_message(message):
         msg = bot.send_message(message.chat.id, 'Введите email')
         bot.register_next_step_handler(msg, check_curator)
     if message.text == 'teacher':
+        msg = bot.send_message(message.chat.id, 'Введите email')
+        bot.register_next_step_handler(msg, check_teacher)
+    if message.text == 'parent':
         msg = bot.send_message(message.chat.id, 'Введите email')
         bot.register_next_step_handler(msg, check_teacher)
 
@@ -178,6 +179,14 @@ def student_main(message):
         result = mycursor.fetchone()
         img = 'sources/'+result[0]+'.png'
         bot.send_photo(message.chat.id, photo=open(img, 'rb'))
+    elif message.text == 'Пароль родителя':
+        mycursor.execute(f"SELECT email FROM students WHERE teleid = %s",(message.chat.id,))
+        semail = mycursor.fetchone()
+        mycursor.execute(f"SELECT pass FROM parents WHERE email = %s",(semail,))
+        result = mycursor.fetchone()
+        password = 'Пароль для родителя: ' + result[0]
+        msg = bot.send_message(message.chat.id, password)
+        start(message)
 
 def curator_main(message):
     if message.text == 'Отправить сообщение':

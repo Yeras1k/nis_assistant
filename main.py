@@ -199,9 +199,9 @@ def teacher_main(message):
         msg = bot.send_message(message.chat.id, 'Напишите класс и подгруппу(через пробел) в котором сейчас ведете урок', reply_markup = service)
         bot.register_next_step_handler(msg, teacher_class)
 
-def teacher_class(message.text):
+def teacher_class(message):
     if message.text == 'Отмена':
-        msg = bot.send_message(message.chat.id, 'Выбор ученика отменен')
+        msg = bot.send_message(message.chat.id, 'Выбор класса отменен')
         bot.register_next_step_handler(msg, start)
     else:
         global group
@@ -218,19 +218,19 @@ def teacher_class(message.text):
             reply_message += f"{studentss[i][0]}: {studentss[i][1]} {studentss[i][2]}"
         bot.send_message(message.chat.id, reply_message)
         service = telebot.types.ReplyKeyboardMarkup(True, True)
-        service.row('Отмена')
+        service.row(group)
         msg = bot.send_message(message.chat.id, "Введите id ученика которым хотите написать комментарий", reply_markup = service)
         bot.register_next_step_handler(msg, select_student)
 
 def select_student(message):
-    if message.text == 'Отмена':
+    if message.text == group:
         bot.send_message(message.chat.id, 'Выбор ученика отменен')
-        teacher_class(message.text = group)
+        teacher_class(message.text)
     elif message.text.isdigit():
         global com_student
         com_student = message.text
         service = telebot.types.ReplyKeyboardMarkup(True, True)
-        service.row('Отмена')
+        service.row(group)
         msg = bot.send_message(message.chat.id, "Напишите свой комментарий", reply_markup = service)
         bot.register_next_step_handler(msg, give_comment)
     else:
@@ -238,9 +238,9 @@ def select_student(message):
         teacher_class(group)
 
 def give_comment(message):
-    if message.text == 'Отмена':
+    if message.text == group:
         bot.send_message(message.chat.id, 'Написание комментария отменено')
-        teacher_class(group)
+        teacher_class(message.text)
     else:
         mycursor.execute(f"SELECT teleid, name, surname FROM students WHERE id = %s",(com_student,))
         result = mycursor.fetchmany(1)
@@ -249,7 +249,7 @@ def give_comment(message):
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row(group)
         msg = bot.send_message(message.chat.id, "Комментарий сохранен", reply_markup = service)
-        bot.register_next_step_handler(msg, teacher_class) 
+        bot.register_next_step_handler(msg, teacher_class)
 
 def select_class(message):
     if message.text == 'Отмена':
@@ -260,7 +260,7 @@ def select_class(message):
         mycursor.execute(f"SELECT teleid FROM students WHERE class = %s",(message.text,))
         students = mycursor.fetchall()
         service = telebot.types.ReplyKeyboardMarkup(True, True)
-        service.row('Отмена')
+        service.row(group)
         msg = bot.send_message(message.chat.id, 'Напишите им сообщение или отправьте картинку', reply_markup = service)
         bot.register_next_step_handler(msg, event)
 

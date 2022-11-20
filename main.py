@@ -221,6 +221,8 @@ def student_main(message):
     elif message.text == 'Пароль родителя':
         mycursor.execute(f"SELECT email FROM students WHERE teleid = %s",(message.chat.id,))
         semail = mycursor.fetchone()
+        mycursor.execute(f"UPDATE parent SET child = {message.chat.id} WHERE child_email = %s",(semail[0],))
+        mydb.commit()
         mycursor.execute(f"SELECT pass FROM parent WHERE child_email = %s",(semail[0],))
         result = mycursor.fetchone()
         password = 'Пароль для родителя: ' + result[0]

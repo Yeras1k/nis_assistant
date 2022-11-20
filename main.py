@@ -72,11 +72,11 @@ def check_student(message):
             msg = bot.send_message(message.chat.id, 'Введите пароль')
             bot.register_next_step_handler(msg, check_pass)
         else:
-            msg = bot.send_message(message.chat.id, 'В доступе отказано')
-            bot.register_next_step_handler(msg, start)
+            bot.send_message(message.chat.id, 'В доступе отказано')
+            start(message)
     else:
-        msg = bot.send_message(message.chat.id, 'Ученик с таким email не найден')
-        bot.register_next_step_handler(msg, start)
+        bot.send_message(message.chat.id, 'Ученик с таким email не найден')
+        start(message)
 
 def check_curator(message):
     global cemail
@@ -95,11 +95,11 @@ def check_curator(message):
             msg = bot.send_message(message.chat.id, 'Введите пароль')
             bot.register_next_step_handler(msg, check_pass_curator)
         else:
-            msg = bot.send_message(message.chat.id, 'В доступе отказано')
-            bot.register_next_step_handler(msg, start)
+            bot.send_message(message.chat.id, 'В доступе отказано')
+            start(message)
     else:
-        msg = bot.send_message(message.chat.id, 'Куратор с таким email не найден')
-        bot.register_next_step_handler(msg, start)
+        bot.send_message(message.chat.id, 'Куратор с таким email не найден')
+        start(message)
 
 def check_teacher(message):
     global temail
@@ -121,11 +121,11 @@ def check_teacher(message):
             msg = bot.send_message(message.chat.id, 'Введите пароль')
             bot.register_next_step_handler(msg, check_pass_teacher)
         else:
-            msg = bot.send_message(message.chat.id, 'В доступе отказано')
-            bot.register_next_step_handler(msg, start)
+            bot.send_message(message.chat.id, 'В доступе отказано')
+            start(message)
     else:
-        msg = bot.send_message(message.chat.id, 'Учитель с таким email не найден')
-        bot.register_next_step_handler(msg, start)
+        bot.send_message(message.chat.id, 'Учитель с таким email не найден')
+        start(message)
 
 def check_pass(message):
         mycursor.execute(f"SELECT pass FROM students WHERE email = %s",(semail,))
@@ -139,8 +139,8 @@ def check_pass(message):
             msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
             bot.register_next_step_handler(msg, student_main)
         else:
-            msg = bot.send_message(message.chat.id, 'Не правильный пароль')
-            bot.register_next_step_handler(msg, start)
+            bot.send_message(message.chat.id, 'Не правильный пароль')
+            start(message)
 
 def check_pass_curator(message):
         mycursor.execute(f"SELECT pass FROM curators WHERE email = %s",(cemail,))
@@ -153,8 +153,8 @@ def check_pass_curator(message):
             msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
             bot.register_next_step_handler(msg, curator_main)
         else:
-            msg = bot.send_message(message.chat.id, 'Не правильный пароль')
-            bot.register_next_step_handler(msg, start)
+            bot.send_message(message.chat.id, 'Не правильный пароль')
+            start(message)
 
 def check_pass_teacher(message):
         mycursor.execute(f"SELECT pass FROM teachers WHERE email = %s",(temail,))
@@ -170,8 +170,8 @@ def check_pass_teacher(message):
             msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
             bot.register_next_step_handler(msg, teacher_main)
         else:
-            msg = bot.send_message(message.chat.id, 'Не правильный пароль')
-            bot.register_next_step_handler(msg, start)
+            bot.send_message(message.chat.id, 'Не правильный пароль')
+            start(message)
 
 def student_main(message):
     if message.text == 'Расписание':

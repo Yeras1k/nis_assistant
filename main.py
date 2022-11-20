@@ -240,7 +240,7 @@ def select_student(message):
 def give_comment(message):
     if message.text == group:
         bot.send_message(message.chat.id, 'Написание комментария отменено')
-        teacher_class(message.text)
+        teacher_class(message)
     else:
         mycursor.execute(f"SELECT teleid, name, surname FROM students WHERE id = %s",(com_student,))
         result = mycursor.fetchmany(1)

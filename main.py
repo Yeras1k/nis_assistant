@@ -168,7 +168,6 @@ def check_pass_parent(message):
         msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
         bot.register_next_step_handler(msg, parent_main)
     else:
-        t =
         bot.send_message(message.chat.id, 'Не правильный пароль')
         start(message)
 

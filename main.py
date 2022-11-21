@@ -25,7 +25,7 @@ mycursor = mydb.cursor(buffered=True)
 def start(message):
     global almatyZone, dt_format
     almatyZone = datetime.now(timezone('Asia/Almaty'))
-    dt_format = "%d.%m.%y %H:%M"
+    dt_format = "%d.%m.%y"
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('student', 'curator')
     service.row('teacher', 'parent')

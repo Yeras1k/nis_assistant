@@ -25,7 +25,7 @@ def start(message):
     data = date.today()
     time = datetime.now()
     time_now = time.strftime("%H:%M")
-    today = data + ' ' + time_now
+    today = data, time_now
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('student', 'curator')
     service.row('teacher', 'parent')

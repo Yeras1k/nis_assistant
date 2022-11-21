@@ -224,8 +224,8 @@ def parent_main(message):
         result = mycursor.fetchall()
         bot.send_message(message.chat.id, result)
         service = telebot.types.ReplyKeyboardMarkup(True, False)
-        for i in range(len(result[0])):
-            service.row(result[0][i])
+        for row in result:
+            service.row(row)
         service.row('Назад')
         msg = bot.send_message(message.chat.id, 'Выберите ребенка', reply_markup = service)
         bot.register_next_step_handler(msg, my_child)

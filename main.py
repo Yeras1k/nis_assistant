@@ -2,8 +2,7 @@ import os
 import telebot
 import logging
 import random
-import datetime
-from datetime import date
+from datetime import date, datetime
 import mysql.connector
 from config import *
 from flask import Flask, request

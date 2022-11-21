@@ -314,7 +314,7 @@ def select_student_otmetka(message):
     if message.text == 'Отмена':
         msg = bot.send_message(message.chat.id, 'Выбор ученика отменен')
         start(message)
-    if message.text == group:
+    elif message.text == group:
         bot.send_message(message.chat.id, 'Выбор ученика отменен')
         teacher_class(message)
     elif message.text.isdigit():
@@ -360,7 +360,7 @@ def select_student(message):
     if message.text == 'Отмена':
         msg = bot.send_message(message.chat.id, 'Выбор класса отменен')
         start(message)
-    if message.text == group:
+    elif message.text == group:
         bot.send_message(message.chat.id, 'Выбор ученика отменен')
         teacher_class(message)
     elif message.text.isdigit():

@@ -225,7 +225,7 @@ def parent_main(message):
         while True:
             result = mycursor.fetchone()
             if result:
-                bot.send_message(message.chat.id, result[0])
+                service.row(result)
             else:
                 break
         service.row('Назад')

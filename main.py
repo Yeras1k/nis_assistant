@@ -343,7 +343,7 @@ def select_class(message):
 def event(message):
     if message.text == 'Отмена':
         msg = bot.send_message(message.chat.id, 'Отправка сообщения отменена')
-        bot.register_next_step_handler(msg, start)
+        start(message)
     if message.text == 'Да':
         msg = bot.send_message(message.chat.id, 'Напишите им сообщение или отправьте картинку')
         bot.register_next_step_handler(msg, event)

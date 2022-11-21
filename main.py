@@ -220,7 +220,7 @@ def student_main(message):
         start(message)
 
 def parent_main(message):
-    if message.text == 'Посмотреть комментарии к ребенку(1)':
+    if message.text == 'Посмотреть комментарии к ребенку':
         mycursor.execute(f"SELECT child_email FROM parent WHERE teleid = %s",(message.chat.id,))
         result = mycursor.fetchall()
         service = telebot.types.ReplyKeyboardMarkup(True, False)

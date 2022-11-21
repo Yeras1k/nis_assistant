@@ -2,6 +2,7 @@ import os
 import telebot
 import logging
 import random
+import time
 from datetime import date, datetime
 import mysql.connector
 from config import *
@@ -22,10 +23,11 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    data = date.today()
+    today = date.today()
     time = datetime.now()
-    time_now = time.strftime("%H:%M")
-    today = data, time_now
+    d2 = today.strftime("%m.%d.%Y")
+    current_time = time.strftime("%H:%M")
+    today = d2, current_time
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('student', 'curator')
     service.row('teacher', 'parent')

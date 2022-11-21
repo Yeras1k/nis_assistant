@@ -28,7 +28,9 @@ def start(message):
     service.row('student', 'curator')
     service.row('teacher', 'parent')
     user_name = message.from_user.username
-    bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль {almatyZone.strftime("%d.%m.%y %H:%M")}".format(message.from_user), reply_markup = service)
+    dt_format = "%d.%m.%y %H:%M"
+    msg = f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль " + almatyZone.strftime(dt_format)
+    bot.send_message(message.chat.id, msg.format(message.from_user), reply_markup = service)
 
 @bot.message_handler(content_types=["text", "photo"])
 def bot_message(message):

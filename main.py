@@ -289,7 +289,7 @@ def teacher_class(message):
             studentss = mycursor.fetchall()
         reply_message = "- All class:\n"
         for i in range(len(studentss)):
-            reply_message += f"{studentss[i][0]}: {studentss[i][1]} {studentss[i][2]}"
+            reply_message += f"{studentss[i][0]}: {studentss[i][1]} {studentss[i][2]}\n"
         bot.send_message(message.chat.id, reply_message)
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row(group)

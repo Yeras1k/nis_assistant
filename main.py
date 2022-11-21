@@ -227,7 +227,7 @@ def parent_main(message):
         for i in range(len(result[0])):
             service.row(result[0][i])
         msg = bot.send_message(message.chat.id, 'Выберите ребенка', reply_markup = service)
-        bot.resgister_next_step_handler(msg, my_child)
+        bot.register_next_step_handler(msg, my_child)
     if message.text == 'Добавить ребенка':
         msg = bot.send_message(message.chat.id, 'Введите email ребенка')
         bot.register_next_step_handler(msg, check_parent)

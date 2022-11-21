@@ -22,7 +22,7 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    date = datetime.today()
+    date = date.today()
     time = datetime.now()
     time_now = time.strftime("%H:%M")
     today = date +' ' + time_now

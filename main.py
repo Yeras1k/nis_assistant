@@ -92,6 +92,7 @@ def check_parent(message):
         bot.send_message(message.chat.id, 'Ученик с таким email не найден')
         start(message)
 
+
 def check_curator(message):
     global cemail
     cemail = message.text.lower()
@@ -250,7 +251,7 @@ def my_child(message):
                 reply_message += f"{comments[i][0]}) {comments[i][1]}: {comments[i][2]} ({comments[i][3]})\n"
         bot.send_message(message.chat.id, reply_message)
         start(message)
-        
+
 def curator_main(message):
     if message.text == 'Отправить сообщение':
         mycursor.execute(f"SELECT shanyrak FROM curators WHERE teleid = %s",(message.chat.id,))

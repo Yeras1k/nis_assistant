@@ -23,13 +23,15 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
+    global almatyZone, dt_format
     almatyZone = datetime.now(timezone('Asia/Almaty'))
+    dt_format = "%d.%m.%y %H:%M"
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('student', 'curator')
     service.row('teacher', 'parent')
     user_name = message.from_user.username
     dt_format = "%d.%m.%y %H:%M"
-    msg = f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль " + almatyZone.strftime(dt_format)
+    msg = f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль "
     bot.send_message(message.chat.id, msg.format(message.from_user), reply_markup = service)
 
 @bot.message_handler(content_types=["text", "photo"])
@@ -317,14 +319,14 @@ def select_student_otmetka(message):
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row(group)
         mycursor.execute(f"SELECT id, name, surname, fathername, email, class FROM students WHERE id = %s",(message.text,))
-        stud = mycursor.fetchall()
-        mycursor.execute(f"INSERT INTO warns(teleid, name, surname, comment, subject) VALUES(%s, %s, %s, %s, %s)", (result[0][0], result[0][1], result[0][2], message.text, tsubject[0]))
+        stud = mycursor.fetchone()
+        mycursor.execute(f"INSERT INTO skip(std_id, name, surname, fathername, class, email, subject, date) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)", (stud[0], stud[1], stud[2], stud[3], stud[5], stud[4], tsubject[0], almatyZone.strftime(dt_format),))
         mydb.commit()
-        msg = bot.send_message(message.chat.id, "Ученик добавлен", reply_markup = service)
-        bot.register_next_step_handler(msg, give_comment)
+        msg = bot.send_message(message.chat.id, "Ученик добавлен в список отутствующих", reply_markup = service)
+        bot.register_next_step_handler(msg, teacher_class_otmetka)
     else:
         bot.send_message(message.chat.id, 'Ошибка')
-        teacher_class(group)
+        start(message)
 
 def teacher_class(message):
     if message.text == 'Отмена':
@@ -362,7 +364,7 @@ def select_student(message):
         bot.register_next_step_handler(msg, give_comment)
     else:
         bot.send_message(message.chat.id, 'Ошибка')
-        teacher_class(group)
+        start(message)
 
 def give_comment(message):
     if message.text == group:

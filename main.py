@@ -225,7 +225,7 @@ def parent_main(message):
         while True:
             result = mycursor.fetchone()
             if result:
-                service.row(result)
+                service.row(result[0])
             else:
                 break
         service.row('Назад')

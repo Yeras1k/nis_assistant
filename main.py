@@ -337,12 +337,14 @@ def select_class(message):
         global students
         mycursor.execute(f"SELECT teleid FROM students WHERE class = %s",(message.text,))
         students = mycursor.fetchall()
-        msg = bot.send_message(message.chat.id, 'Напишите им сообщение или отправьте картинку')
+        service = telebot.types.ReplyKeyboardMarkup(True, True)
+        service.row('Да','Отмена')
+        msg = bot.send_message(message.chat.id, 'Напишите им сообщение или отправьте картинку', reply_markup = service)
         bot.register_next_step_handler(msg, event)
 
 def event(message):
     if message.text == 'Отмена':
-        msg = bot.send_message(message.chat.id, 'Отправка сообщения отменена')
+        bot.send_message(message.chat.id, 'Отправка сообщения отменена')
         start(message)
     if message.text == 'Да':
         msg = bot.send_message(message.chat.id, 'Напишите им сообщение или отправьте картинку')

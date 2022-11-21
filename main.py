@@ -337,9 +337,7 @@ def select_class(message):
         global students
         mycursor.execute(f"SELECT teleid FROM students WHERE class = %s",(message.text,))
         students = mycursor.fetchall()
-        service = telebot.types.ReplyKeyboardMarkup(True, True)
-        service.row(group)
-        msg = bot.send_message(message.chat.id, 'Напишите им сообщение или отправьте картинку', reply_markup = service)
+        msg = bot.send_message(message.chat.id, 'Напишите им сообщение или отправьте картинку')
         bot.register_next_step_handler(msg, event)
 
 def event(message):

@@ -224,10 +224,10 @@ def parent_main(message):
     if message.text == 'Посмотреть комментарии к ребенку':
         mycursor.execute(f"SELECT child_email FROM parent WHERE teleid IN (%s)", (message.chat.id,))
         result = mycursor.fetchall()
-        bot.send_message(message.chat.id, result[1])
+        bot.send_message(message.chat.id, result)
         service = telebot.types.ReplyKeyboardMarkup(True, False)
-        for i in range(len(result[0])):
-            service.row(result[0][i])
+        for i in range(len(result)):
+            service.row(result[i])
         service.row('Назад')
         msg = bot.send_message(message.chat.id, 'Выберите ребенка', reply_markup = service)
         bot.register_next_step_handler(msg, my_child)

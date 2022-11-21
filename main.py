@@ -24,7 +24,7 @@ mycursor = mydb.cursor(buffered=True)
 def start(message):
     date = datetime.today()
     time = datetime.now()
-    time_now = time.strgtime(%H:%M)
+    time_now = time.strftime(%H:%M)
     today = date +' ' + time_now
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('student', 'curator')

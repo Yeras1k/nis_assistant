@@ -346,7 +346,7 @@ def event(message):
     if message.text == 'Отмена':
         bot.send_message(message.chat.id, 'Отправка сообщения отменена')
         start(message)
-    if message.text == 'Да':
+    elif message.text == 'Да':
         msg = bot.send_message(message.chat.id, 'Напишите им сообщение или отправьте картинку')
         bot.register_next_step_handler(msg, event)
     elif message.content_type == "photo":

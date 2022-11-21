@@ -306,10 +306,14 @@ def teacher_class_otmetka(message):
         bot.send_message(message.chat.id, reply_message)
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row(group)
+        service.row('Отмена')
         msg = bot.send_message(message.chat.id, "Введите id ученика который отуствует\n(у вас одна попытка иначе он попадет в базу данных отсутствующих)", reply_markup = service)
         bot.register_next_step_handler(msg, select_student_otmetka)
 
 def select_student_otmetka(message):
+    if message.text == 'Отмена':
+        msg = bot.send_message(message.chat.id, 'Выбор ученика отменен')
+        start(message)
     if message.text == group:
         bot.send_message(message.chat.id, 'Выбор ученика отменен')
         teacher_class(message)
@@ -348,10 +352,14 @@ def teacher_class(message):
         bot.send_message(message.chat.id, reply_message)
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row(group)
+        service.row('Отмена')
         msg = bot.send_message(message.chat.id, "Введите id ученика которым хотите написать комментарий", reply_markup = service)
         bot.register_next_step_handler(msg, select_student)
 
 def select_student(message):
+    if message.text == 'Отмена':
+        msg = bot.send_message(message.chat.id, 'Выбор класса отменен')
+        start(message)
     if message.text == group:
         bot.send_message(message.chat.id, 'Выбор ученика отменен')
         teacher_class(message)

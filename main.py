@@ -22,10 +22,10 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    date = date.today()
+    data = date.today()
     time = datetime.now()
     time_now = time.strftime("%H:%M")
-    today = date +' ' + time_now
+    today = data + ' ' + time_now
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('student', 'curator')
     service.row('teacher', 'parent')

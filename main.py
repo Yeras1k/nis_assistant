@@ -2,7 +2,7 @@ import os
 import telebot
 import logging
 import random
-import time
+from pytz import timezone
 from datetime import date, datetime
 import mysql.connector
 from config import *
@@ -23,16 +23,12 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    today = date.today()
-    time = datetime.now()
-    d2 = today.strftime("%m.%d.%Y")
-    current_time = time.strftime("%H:%M")
-    today = d2 + current_time
+    almatyZone = datetime.now(timezone('Asia/Almaty'))
     service = telebot.types.ReplyKeyboardMarkup(True, True)
     service.row('student', 'curator')
     service.row('teacher', 'parent')
     user_name = message.from_user.username
-    bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль {today}".format(message.from_user), reply_markup = service)
+    bot.send_message(message.chat.id, f"Привет, {user_name}! Это NIS Assistant чат бот. \n Выберите свою роль {almatyZone.strftime("%d.%m.%y %H:%M")}".format(message.from_user), reply_markup = service)
 
 @bot.message_handler(content_types=["text", "photo"])
 def bot_message(message):

@@ -227,14 +227,42 @@ def student_main(message):
         start(message)
     elif message.text == 'Кружки':
         service = telebot.types.ReplyKeyboardMarkup(True, False)
-        service.row('Обновить расписание кружки')
         bot.send_message(message.chat.id, 'Кружки', reply_markup = service)
         mycursor.execute(f"SELECT hobby FROM hobbys WHERE teleid = %s",(message.chat.id,))
+        while True:
         result = mycursor.fetchone()
-        if result == None:
-            msg = bot.send_message(message.chat.id, 'Введите название кружка в который ходите в школе и внеурочное дело', reply_markup = service)
-            bot.register_next_step_handler(msg, add_hobby)
+        if result:
+            service.row(result[0])
+        else:
+            break
+        service.row('Добавить кружок', 'Назад')
+        msg = bot.send_message(message.chat.id, 'Выберите кружок', reply_markup = service)
+        bot.register_next_step_handler(msg, select_hobby)
             
+def select_hobby(message):
+    if message.text == 'Назад':
+        start(message)
+    elif message.text == 'Добавить кружок':
+        msg = bot.send_message(message.chat.id, 'Введите название кружка в который ходите в школе и внеурочное дело', reply_markup = service)
+        bot.register_next_step_handler(msg, add_hobby)
+    else:
+        global hobby
+        hobby = message.text
+        service = telebot.types.ReplyKeyboardMarkup(True, False)
+        service.row('Изменить расписание кружка')
+        service.row('Удалить кружок')
+        service.row('Кружки')
+        msg = bot.send_message(message.chat.id, 'Выберите действие', reply_markup = service)
+        bot.register_next_step_handler(msg, edit_hobby)
+
+def edit_hobby(message):
+    if message.text == 'Кружки':
+        student_main(message)
+    elif message.text == 'Удалить кружок':
+        mycursor.execute(f"DELETE FROM hobbys WHERE hobby = %s AND teleid = %s",(hobby, message.chat.id,))
+        bot.send_message(message.chat.id, 'Кружок удален')
+        start(message)
+        
 def add_hobby(message):
     mycursor.execute(f"SELECT name, surname, class FROM students WHERE teleid = %s",(message.chat.id,))
     result = mycursor.fetchone()

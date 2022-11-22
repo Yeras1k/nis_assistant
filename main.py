@@ -260,6 +260,7 @@ def edit_hobby(message):
         student_main(message)
     elif message.text == 'Удалить кружок':
         mycursor.execute(f"DELETE FROM hobbys WHERE hobby = %s AND teleid = %s",(hobby, message.chat.id,))
+        mydb.commit()
         bot.send_message(message.chat.id, 'Кружок удален')
         start(message)
         

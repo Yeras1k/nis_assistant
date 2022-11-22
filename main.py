@@ -227,7 +227,6 @@ def student_main(message):
         start(message)
     elif message.text == 'Кружки':
         service = telebot.types.ReplyKeyboardMarkup(True, False)
-        bot.send_message(message.chat.id, 'Кружки', reply_markup = service)
         mycursor.execute(f"SELECT hobby FROM hobbys WHERE teleid = %s",(message.chat.id,))
         while True:
             result = mycursor.fetchone()

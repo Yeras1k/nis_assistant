@@ -223,8 +223,25 @@ def student_main(message):
         mycursor.execute(f"SELECT pass FROM parent WHERE child_email = %s",(semail[0],))
         result = mycursor.fetchone()
         password = 'Пароль для родителя: ' + result[0]
-        msg = bot.send_message(message.chat.id, password)
+        bot.send_message(message.chat.id, password)
         start(message)
+    elif message.text == 'Кружки':
+        service = telebot.types.ReplyKeyboardMarkup(True, False)
+        service.row('Обновить расписание кружки')
+        bot.send_message(message.chat.id, 'Кружки', reply_markup = service)
+        mycursor.execute(f"SELECT hobby FROM hobbys WHERE teleid = %s",(message.chat.id,))
+        result = mycursor.fetchone()
+        if result == None:
+            msg = bot.send_message(message.chat.id, 'Введите название кружка в который ходите в школе и внеурочное дело', reply_markup = service)
+            bot.register_next_step_handler(msg, add_hobby)
+            
+def add_hobby(message):
+    mycursor.execute(f"SELECT name, surname, class FROM students WHERE teleid = %s",(message.chat.id,))
+    result = mycursor.fetchone()
+    mycursor.execute(f"INSERT INTO hobbys(teleid, name, surname, class, hobby) VALUES(%s, %s, %s, %s, %s)", (message.chat.id, result[0], result[1], result[2], message.text,))
+    mydb.commit()
+    msg = bot.send_message(message.chat.id, 'Кружок добавлен')
+    start(message)
 
 def parent_main(message):
     if message.text == 'Посмотреть комментарии к ребенку':
@@ -381,7 +398,7 @@ def give_comment(message):
     else:
         mycursor.execute(f"SELECT teleid, name, surname FROM students WHERE id = %s",(com_student,))
         result = mycursor.fetchone()
-        mycursor.execute(f"INSERT INTO warns(teleid, name, surname, comment, subject) VALUES(%s, %s, %s, %s, %s)", (result[0], result[1], result[2], message.text, tsubject[0]))
+        mycursor.execute(f"INSERT INTO warns(teleid, name, surname, comment, subject) VALUES(%s, %s, %s, %s, %s)", (result[0], result[1], result[2], message.text, tsubject[0],))
         mydb.commit()
         service = telebot.types.ReplyKeyboardMarkup(True, True)
         service.row(group)

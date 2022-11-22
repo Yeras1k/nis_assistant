@@ -230,11 +230,11 @@ def student_main(message):
         bot.send_message(message.chat.id, 'Кружки', reply_markup = service)
         mycursor.execute(f"SELECT hobby FROM hobbys WHERE teleid = %s",(message.chat.id,))
         while True:
-        result = mycursor.fetchone()
-        if result:
-            service.row(result[0])
-        else:
-            break
+            result = mycursor.fetchone()
+            if result:
+                service.row(result[0])
+            else:
+                break
         service.row('Добавить кружок', 'Назад')
         msg = bot.send_message(message.chat.id, 'Выберите кружок', reply_markup = service)
         bot.register_next_step_handler(msg, select_hobby)

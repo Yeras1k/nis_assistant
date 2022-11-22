@@ -60,7 +60,7 @@ def check_student(message):
         if dbresult[0] == message.chat.id:
             service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Расписание', 'Мероприятия')
-            service.row('Кружки')
+            service.row('Кружки', 'Пароль родителя')
             msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
             bot.register_next_step_handler(msg, student_main)
         elif not dbresult[0]:

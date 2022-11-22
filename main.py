@@ -340,7 +340,7 @@ def select_class_hobby(message):
         children = mycursor.fetchall()
         reply_message = "- All class:\n"
         for i in range(len(children)):
-            reply_message += f"{children[i][0]}• {children[i][1]} {children[i][2]}: {children[i][3]}\n"
+            reply_message += f"•{children[i][0]} {children[i][1]} {children[i][2]}: {children[i][3]}\n"
         bot.send_message(message.chat.id, reply_message)
         start(message)
         

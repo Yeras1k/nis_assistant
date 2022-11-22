@@ -242,7 +242,7 @@ def select_hobby(message):
     if message.text == 'Назад':
         start(message)
     elif message.text == 'Добавить кружок':
-        msg = bot.send_message(message.chat.id, 'Введите название кружка в который ходите в школе и внеурочное дело', reply_markup = service)
+        msg = bot.send_message(message.chat.id, 'Введите название кружка в который ходите в школе и внеурочное дело')
         bot.register_next_step_handler(msg, add_hobby)
     else:
         global hobby

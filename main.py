@@ -155,7 +155,7 @@ def check_pass(message):
             mydb.commit()
             service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Расписание', 'Мероприятия')
-            service.row('Кружки')
+            service.row('Кружки', 'Пароль родителя')
             msg = bot.send_message(message.chat.id, 'Успешно вошли', reply_markup = service)
             bot.register_next_step_handler(msg, student_main)
         else:
@@ -215,6 +215,7 @@ def student_main(message):
         result = mycursor.fetchone()
         img = 'sources/'+result[0]+'.png'
         bot.send_photo(message.chat.id, photo=open(img, 'rb'))
+        start(message)
     elif message.text == 'Пароль родителя':
         mycursor.execute(f"SELECT email FROM students WHERE teleid = %s",(message.chat.id,))
         semail = mycursor.fetchone()

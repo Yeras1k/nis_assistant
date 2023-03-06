@@ -54,6 +54,7 @@ def check_student(message):
     semail = message.text.lower()
     mycursor.execute(f"SELECT email FROM students WHERE email = %s",(semail,))
     result = mycursor.fetchone()
+    bot.send_message(message.chat.id, f'{result}')
     if result:
         mycursor.execute(f"SELECT teleid FROM students WHERE email = %s",(semail,))
         dbresult = mycursor.fetchone()

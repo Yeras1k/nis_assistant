@@ -58,7 +58,9 @@ def check_student(message):
     if result:
         mycursor.execute(f"SELECT teleid FROM students WHERE email = %s",(semail,))
         dbresult = mycursor.fetchone()
-        if dbresult[0] == message.chat.id:
+        bot.send_message(message.chat.id, f'{dbresult}')
+        bot.send_message(message.chat.id, f'{message.chat.id}')
+        if int(dbresult[0]) == message.chat.id:
             service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Расписание', 'Мероприятия')
             service.row('Кружки', 'Пароль родителя')

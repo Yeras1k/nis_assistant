@@ -23,8 +23,6 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    mycursor.execute(f"DROP TABLE students")
-    mydb.commit()
     mycursor.execute(f"CREATE TABLE students (id int AUTO_INCREMENT, teleid int(15), name varchar(20), surname varchar(20), fathername varchar(20), class varchar(5), subgroup int(2), email varchar(144), pass varchar(20), PRIMARY KEY (id));")
     mydb.commit()
     global almatyZone, dt_format

@@ -23,6 +23,8 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
+    mycursor.execute(f"DROP TABLE parent")
+    mydb.commit()
     global almatyZone, dt_format
     almatyZone = datetime.now(timezone('Asia/Almaty'))
     dt_format = "%d.%m.%y"

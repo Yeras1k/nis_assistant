@@ -62,7 +62,7 @@ def check_student(message):
         dbresult = mycursor.fetchone()
         bot.send_message(message.chat.id, f'{dbresult}')
         bot.send_message(message.chat.id, f'{message.chat.id}')
-        if int(dbresult[0]) == message.chat.id:
+        if dbresult[0] == message.chat.id:
             service = telebot.types.ReplyKeyboardMarkup(True, False)
             service.row('Расписание', 'Мероприятия')
             service.row('Кружки', 'Пароль родителя')

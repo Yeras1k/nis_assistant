@@ -23,8 +23,6 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
-    mycursor.execute(f"CREATE TABLE parent (id int AUTO_INCREMENT, teleid int(15), surname varchar(20), name varchar(20), fathername varchar(20), email varchar(144), pass varchar(20), child varchar(15), child_email varchar(144), PRIMARY KEY (id));")
-    mydb.commit()
     global almatyZone, dt_format
     almatyZone = datetime.now(timezone('Asia/Almaty'))
     dt_format = "%d.%m.%y"

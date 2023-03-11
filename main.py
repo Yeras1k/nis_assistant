@@ -23,6 +23,8 @@ mycursor = mydb.cursor(buffered=True)
 
 @bot.message_handler(commands=["start"])
 def start(message):
+    mycursor.execute(f"DROP TABLE students")
+    mydb.commit()
     global almatyZone, dt_format
     almatyZone = datetime.now(timezone('Asia/Almaty'))
     dt_format = "%d.%m.%y"
@@ -50,6 +52,8 @@ def bot_message(message):
         bot.register_next_step_handler(msg, check_parent)
 
 def check_student(message):
+    mycursor.execute(f"CREATE TABLE students (id int AUTO_INCREMENT, teleid varchar(20), name varchar(20), surname varchar(20), fathername varchar(20), class varchar(5), subgroup int(2), email varchar(144), pass varchar(20), PRIMARY KEY (id));")
+    mydb.commit()
     global semail
     semail = message.text.lower()
     mycursor.execute(f"SELECT email FROM students WHERE email = %s",(semail,))

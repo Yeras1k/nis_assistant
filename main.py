@@ -105,6 +105,7 @@ def check_curator(message):
     cemail = message.text.lower()
     mycursor.execute(f"SELECT email FROM curators WHERE email = %s",(cemail,))
     result = mycursor.fetchone()
+    bot.send_message(message.chat.id, f'{result}')
     if result:
         mycursor.execute(f"SELECT teleid FROM curators WHERE email = %s",(cemail,))
         dbresult = mycursor.fetchone()
